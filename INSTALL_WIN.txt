@@ -1,0 +1,115 @@
+
+
+
+Geex
+
+
+Installation  : Windows
+Here is the installation process on a clean Windows.
+
+Prerequisites :
+
+- CMake >= 2.4 (2.8 preferred)
+
+
+
+1) Install Boost library (it is required by CGAL)
+
+    option 1: Using BoostPro installer (32 bit only)
+
+     - download the latest Boost Installer, downloaded on http://www.boostpro.com/products/free
+     - run the installer. When prompted, select the version of Visual Studio you use and all the 'variant' of the library you need. If unsure about the variant, you could probably select all of them.
+     - When you are asked to check the components to be installed, verify that Boost Thread and Data_Time are (partially) selected. (Minimal selections: Boost head files + Boost Thread + Boost Data_Time)
+     - Select the install folder. 
+     - press 'Install' and go get a coffee while the installer downloads and installs chosen components.
+
+   option 2: Install Boost from sources. (32 and 64 bit)
+     - download boost src and bjam from www.boost.org, and extract boost to a folder and put bjam.exe into your system path, for instance, c:\windows.
+     - compile boost-thread and boost-data-time libraries only.
+     Run MSVC Compiler Command Prompt (choosing 32bit or  64bit  compiler first) and execute the following command
+     for 32 bits:
+        bjam --toolset=msvc --build-type=complete --with-thread --with-date_time stage
+     for 64 bit:
+        bjam --toolset=msvc address-model=64 --build-type=complete --stagedir=stage64 --with-thread --with-date_time stage
+
+     You can use specify --link=static to generate static libries only.
+     The generated libraries are in stage/stage64 directory. copy them into /lib. 
+
+
+2) Set BOOSTROOT environment variable
+
+ You may have to manually set the environment variable BOOSTROOT to the path where you installed Boost.
+ - In  Control Panel > System > Advanced > Environment Variables , check if the variable already exists. If not, create it and set its value to the path to the Boost directory. The "boost", "lib" directories should be in the directory you specify as the BOOSTROOT value.
+
+
+3) Install CGAL
+
+ - download the latest CGAL windows installer on http://www.cgal.org/download.html  (The only requisite is to check "I accept the license terms" at the bottom of the page and click "submit"), or on http://gforge.inria.fr/frs/?group_id=52 .
+ - Run the installer, and like for boost, select the correct compiler and variant (I bet you have to match CGAL variants with Boost variants...)
+ - Select the install folder. Avoid path with parenthesis in it ! (it causes errors in some CMake scripts...)
+ - when asked about the environmental variables, make sure both that CGAL_DIR is set and $CGAL_DIR\auxiliary\gmp\lib is added to the PATH.
+ - finish the installation.
+
+
+4) Prepare CGAL compilation (Windows Console mode)
+
+ - Run MSVC Compiler Command Prompt (choosing 32bit or 64bit compiler). 
+ - Run "cmake-gui ." on the CGAL directory(the topmost with a CMakeLists.txt file) , WITH THE SAME DIRECTORY for the source and binaries.
+ - You may have to press "Configure" twice or more times until the "OK" or "generate" button becomes available.
+
+  This step will generate files specifically crafted for your system.
+
+
+5) Compile CGAL
+
+ - open the solution (CGAL.sln) in Visual Studio
+ - set the type of configuration you want using the Configuration Manager
+ - build the solution
+   If you are using the latest boost ( >= 1.42) which defines INTMAX_T and causes the confliction with CGAL, just open $CGAL_DIR\auxiliary\gmp\include\mpfr.h  and comment out line 49 "//# define _MPFR_H_HAVE_INTMAX_T 1".
+ - repeat the last two steps for each configuration you plan on using (at least Release and Debug are recommended)
+
+
+Now, you have an environment that can build Geex.
+
+
+Getting and running Geex:
+
+
+1) get Geex sources
+
+ You can either get a tarball with the source, or get Geex from its InriaGforge SVN repository. Here we only consider the second option.
+Prerequisite: a SVN client. Here we consider using TortoiseSVN( http://tortoisesvn.tigris.org/ ) .
+
+
+ - Create a folder where you want the sources to live. From now on, we'll call this folder GEEX_ROOT.
+ - Checkout the sources from https://scm.gforge.inria.fr/svn/cgal/ in the folder. As of today, you must be authorized by one of the project admins to be able to complete this step.
+   * Right-click on the folder > SVN Checkout, and only set the "url of repository" to the url above.
+
+
+
+2) Prepare Geex for compilation
+
+ - Run MSVC Compiler Command Prompt (choosing 32bit or 64bit compiler)
+ - Run "cmake-gui ." on the GEEX_ROOT directory. You can specify another directory or a subdirectory for the binaries, like GEEX_ROOT/build/Windows
+ - You may have to press "Configure" twice or more times until the "OK" or "generate" button becomes available.
+
+or
+
+ - modify configure.bat to adjust your generator and your cmake path
+ - run configure.bat
+
+
+3) Compile Geex
+
+ - open the solution (GEEX_ROOT/build/Windows/Geex.sln) in Visual Studio
+ - set the type of configuration you want using the Configuration Manager
+ - build the solution
+ - Copy glut32.dll or glut64.dll (located in GEEX_ROOT/glut-32/lib) into the build directory (GEEX_ROOT/build/Windows/binaries/bin/<Configuration> ).
+
+
+ <insert potential errors and their workaround>
+
+
+4) Run Geex
+
+ - Now, at last, you should be able to run the Geex projects.
